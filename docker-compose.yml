@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: linkedin
+      POSTGRES_PASSWORD: linkedin
+      POSTGRES_DB: linkedin_agent
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://linkedin:linkedin@db:5432/linkedin_agent
+    depends_on: [db]
+volumes:
+  pgdata:

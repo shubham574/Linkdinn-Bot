@@ -1,0 +1,1 @@
+# TODO (Phase 2-4): researcher prompt. Must define Role, Input, Output, Constraints, Failure behavior.
