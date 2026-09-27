@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     linkedin_access_token: str = ""
     linkedin_api_version: str = ""
 
+    whatsapp_phone_number: str = ""
+    whatsapp_api_key: str = ""
+
     # Safe defaults: nothing is published unless BOTH are flipped.
     dry_run: bool = True
     auto_publish: bool = False

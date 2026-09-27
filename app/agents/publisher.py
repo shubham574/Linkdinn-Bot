@@ -70,3 +70,29 @@ class LinkedInPublisher:
                 
             log.info(f"Successfully published LinkedIn post: {post_id}")
             return post_id
+import urllib.parse
+
+class CallMeBotWhatsAppPublisher:
+    "Sends posts to WhatsApp using CallMeBot API."
+    
+    def __init__(self, settings: Settings):
+        self.settings = settings
+        self.phone_number = settings.whatsapp_phone_number
+        self.api_key = settings.whatsapp_api_key
+
+    def publish(self, text: str, run_id: str) -> str:
+        "Sends a text message via WhatsApp."
+        if not self.phone_number or not self.api_key:
+            raise ValueError("WHATSAPP_PHONE_NUMBER or WHATSAPP_API_KEY is missing from settings.")
+            
+        encoded_text = urllib.parse.quote(text)
+        url = f"https://api.callmebot.com/whatsapp.php?phone={self.phone_number}&text={encoded_text}&apikey={self.api_key}"
+        
+        with httpx.Client() as client:
+            resp = client.get(url)
+            
+            if not resp.is_success:
+                raise RuntimeError(f"Failed to send WhatsApp message: {resp.text}")
+                
+            log.info(f"Successfully sent WhatsApp message to {self.phone_number}")
+            return f"whatsapp_{run_id}"

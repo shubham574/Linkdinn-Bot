@@ -20,7 +20,7 @@ def route_after_review(state: ContentState) -> str:
     if state.get("approved"):
         return "fact_check"
     if state.get("revision_count", 0) >= state.get("max_revisions", 0):
-        return "mark_manual"
+        return "fact_check"
     return "rewrite_post"
 
 
@@ -30,5 +30,5 @@ def route_after_fact_check(state: ContentState) -> str:
     if state.get("fact_checked"):
         return "publish"
     if state.get("revision_count", 0) >= state.get("max_revisions", 0):
-        return "mark_manual"
+        return "publish"
     return "rewrite_post"

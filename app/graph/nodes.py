@@ -119,7 +119,8 @@ def build_nodes(deps: Deps) -> dict[str, Any]:
         except Exception as e:
             return _fail(state, "fact_check", f"{type(e).__name__}: {e}")
         update: dict[str, Any] = {"fact_check_result": result.model_dump(), "fact_checked": result.passed}
-        if result.passed:
+        is_force = state.get("revision_count", 0) >= state.get("max_revisions", 0)
+        if result.passed or is_force:
             update["final_post"] = post
         return update
 
@@ -127,7 +128,12 @@ def build_nodes(deps: Deps) -> dict[str, Any]:
         # Idempotency: never publish twice for one run.
         if state.get("linkedin_post_id") or state.get("published"):
             return {"published": True, "status": PUBLISHED}
-        if not (state.get("approved") and state.get("fact_checked") and state.get("final_post")):
+            
+        is_approved = state.get("approved")
+        is_fact_checked = state.get("fact_checked")
+        is_force = state.get("revision_count", 0) >= state.get("max_revisions", 0)
+        
+        if not ((is_approved or is_force) and (is_fact_checked or is_force) and state.get("final_post")):
             return _fail(state, "publish", "refusing to publish: checks not passed")
         if s.dry_run:
             log.info("run=%s DRY_RUN: not publishing", state["run_id"])

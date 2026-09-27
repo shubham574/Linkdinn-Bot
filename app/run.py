@@ -9,7 +9,7 @@ from app.agents import stubs
 from app.agents.gemini import GeminiResearcher, GeminiWriter, GeminiRewriter, GeminiFactChecker
 from app.agents.laya_agents import LayaTopicSelector, LayaPostRater
 from app.agents.memory import SQLMemoryStore
-from app.agents.publisher import LinkedInPublisher
+from app.agents.publisher import LinkedInPublisher, CallMeBotWhatsAppPublisher
 from app.config import get_settings
 from app.graph.nodes import Deps
 from app.graph.workflow import build_workflow
@@ -28,7 +28,7 @@ def build_deps(settings, repository) -> Deps:
         rater=LayaPostRater(settings),
         fact_checker=GeminiFactChecker(settings),
         repository=repository,
-        publisher=LinkedInPublisher(settings),
+        publisher=CallMeBotWhatsAppPublisher(settings),
     )
 
 
